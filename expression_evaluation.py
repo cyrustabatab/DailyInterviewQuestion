@@ -1,6 +1,40 @@
 
 
 
+
+def eval_helper(expression,index=0):
+    result =0
+    operation = '+'
+
+    while index < len(expression):
+        c = expression[index]
+        if c.isdigit():
+            if operation == '+':
+                result += int(c)
+            else:
+                result -= int(c)
+        elif c in  ('+','-'):
+            operation = c
+        elif c == '(':
+            n,index = eval_helper(expression,index + 1)
+            if operation == '+':
+                result += n
+            else:
+                result -= n
+        elif c == ')':
+            return (result,index)
+        index += 1
+
+    return result,index
+
+
+def eval(expression):
+
+    return eval_helper(expression)
+
+
+
+
 def big_addition(x,y):
 
     assert x and y
@@ -62,11 +96,14 @@ class InvalidSymbolException(Exception):
 def expression_evaluation(s):
 
     i = 0
-
+    
+    
     operand_stack = []
     operator_stack = []
     operators = {"*": 1,"/": 1,"+": 0,"-":0}
     
+    seen_first = False
+    first_operator = None
     while i < len(s):
         c = s[i]
         if c == ' ':
@@ -84,6 +121,11 @@ def expression_evaluation(s):
             i = j
             continue
         elif c in operators:
+            if not seen_first:
+                first_operator= c
+                seen_first = True
+                i += 1
+                continue
             while operator_stack and operator_stack[-1] != '(' and operators[c] <= operators[operator_stack[-1]]:
                 evaluate(operator_stack,operand_stack)
 
@@ -97,15 +139,22 @@ def expression_evaluation(s):
             operator_stack.pop()
         else:
             raise InvalidSymbolException(c)
-
+        
+        seen_first = True
         i += 1
 
 
 
     while operator_stack:
         evaluate(operator_stack,operand_stack)
-
+    
+    if first_operator:
+        if first_operator == "-": 
+            return -operand_stack[0]
+    
     return operand_stack[0]
+                
+
 
 
 def evaluate(operator_stack,operand_stack):
@@ -124,8 +173,7 @@ def evaluate(operator_stack,operand_stack):
 
 if __name__ == "__main__":
     
-    s = "(3 * 4) + 3 / 2"
-    print(s)
-    print(expression_evaluation(s))
+    s = "-(2 + 3) + 4"
+    print(eval(s))
 
 
