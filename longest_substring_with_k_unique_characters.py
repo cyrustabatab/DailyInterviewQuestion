@@ -71,8 +71,8 @@ def longest_substring_with_k_unique_characters(s,k):
 if __name__ == "__main__":
    
 
-    s = "aabbcc"
-    k = 2
+    s = "aabacbebebe"
+    k = 3
 
     print(longest_substring_with_k_unique_characters(s,k))
 

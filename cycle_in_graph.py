@@ -83,6 +83,41 @@ class Graph:
 
         return g
 
+def find_cycle_bfs(g):
+    
+    count = 0
+    in_degrees = {v: 0 for v in g.vertices}
+    
+
+    for node in g:
+        for neighbor in node.get_neighbors():
+            in_degrees[neighbor.id] += 1
+    
+    queue = deque()
+
+    for _id,degree in in_degrees.items():
+        if degree == 0:
+            queue.append(g[_id])
+    
+    if not queue:
+        return True
+    while queue:
+        current = queue.popleft()
+        coutn += 1
+
+        for neighbor in current.get_neighbors():
+            in_degrees[neighbor.id] -= 1
+            if in_degrees[neighbor.id] == 0:
+                queue.append(neighbor)
+
+        
+    if count != g.num_vertices:
+        return True
+
+    return False
+    
+     
+
 def dfs_visit(node,parent):
     #no need for parent state node  
 

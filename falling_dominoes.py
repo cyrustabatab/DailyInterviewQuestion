@@ -32,7 +32,6 @@ def falling_dominoes(dominoes):
 
         forces[i] -= force
 
-
     
     print(forces)
 
